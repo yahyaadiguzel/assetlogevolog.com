@@ -1,2 +1,1 @@
-# assetlogevolog.com
-assetlogevolog
+hicbişeys.adasdas
