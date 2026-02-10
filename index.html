@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Envanter Yönetimi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:#f4f6f9;margin:0}
+header{background:#4a90c2;color:#fff;padding:12px 20px;font-size:18px}
+.container{padding:20px}
+input#search{padding:8px;width:300px;max-width:100%;margin-bottom:15px}
+table{width:100%;border-collapse:collapse;background:#fff}
+th,td{padding:10px;border-bottom:1px solid #ddd;font-size:14px;text-align:left}
+th{background:#f0f2f5}
+.status{padding:4px 8px;border-radius:4px;color:#fff;font-size:12px}
+.ready{background:#2ecc71}
+.retired{background:#e74c3c}
+img{width:45px}
+@media(max-width:768px){
+  table,thead,tbody,th,td,tr{display:block}
+  th{display:none}
+  td{padding:8px}
+}
+</style>
+</head>
+<body>
+
+<header>EvoLog Asset Management</header>                              
+
+<div class="container">
+<input id="search" placeholder="Ara..." onkeyup="filter()">
+<br>
+<table id="tbl">
+<thead>
+<tr>
+<th>Ad</th><th>Resim</th><th>Etiket</th><th>Seri</th>
+<th>Model</th><th>Kategori</th><th>Durum</th><th>Konum</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+<script>
+// Google Sheets JSON linki
+const sheetURL = "https://opensheet.elk.sh/SHEET_ID/Sayfa1";
+
+fetch(sheetURL)
+.then(r => r.json())
+.then(data => {
+  const tb = document.querySelector("tbody");
+  data.forEach(d => {
+    tb.innerHTML += `
+<tr>
+<td>${d["Demirbaş Adı"]}</td>
+<td><img src="${d.ResimURL||'https://via.placeholder.com/45'}"></td>
+<td>${d.Etiket}</td>
+<td>${d["Seri No"]}</td>
+<td>${d.Model}</td>
+<td>${d.Kategori}</td>
+<td><span class="status ${d.Durum=='Ready'?'ready':'retired'}">${d.Durum}</span></td>
+<td>${d.Konum}</td>
+</tr>`;
+  });
+});
+
+function filter(){
+  let v = document.getElementById("search").value.toLowerCase();
+  document.querySelectorAll("tbody tr").forEach(r=>{
+    r.style.display = r.innerText.toLowerCase().includes(v)?"":"none";
+  });
+}
+</script>
+
+</body>
+</html>
